@@ -14,9 +14,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from matplotlib import pyplot as plt
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 from deep_learning_framework.constants import Constants
-from deep_learning_framework.data_pytorch import ASLDataSet
+from deep_learning_framework.data_pytorch import ASLDataSet, index_to_class
 
 EXPANSION = 4
 
@@ -179,7 +180,7 @@ def train(epoch: int, device, network: ResNet50, train_loader, optimizer: torch.
             # save the state dictionaries of both the neural network model and the optimizer
             if is_save:
                 torch.save(network.state_dict(), 'model.pth')
-                torch.save(optimizer.state_dict(), 'optimizer.pth')
+                torch.save(optimizer.state_dict(), '../optimizer.pth')
 
     return train_losses, train_counter
 
@@ -203,7 +204,7 @@ def validate(network: ResNet50, val_loader, val_losses, device='cuda', get_accur
             output = network(data)
             # compute the negative log function loss
             val_loss += F.cross_entropy(output, target, reduction='sum').item()
-            pred = output.data.max(1, keepdim=True)[1]
+            pred = output.argmax(dim=1)
             correct += pred.eq(target.data.view_as(pred)).sum()
 
     val_loss /= len(val_loader.dataset)
@@ -260,7 +261,7 @@ def train_network():
     plt.show(block=True)
 
 
-def test_network(network_path):
+def test_network(network_path, test_loader):
     """
     Function to test network. This should return a confusion metrics plot.
 
@@ -272,15 +273,58 @@ def test_network(network_path):
     network = ResNet50().to(device)
 
     # load the save model
-    network.load_state_dict(torch.load('model.pth'))
+    network.load_state_dict(torch.load(network_path))
+    # evaluate model with test data
+    network.eval()
+
+    test_loss = 0
+    correct = 0
+    predictions = []
+    targets = []
+
+    # make prediction with the test data
+    with torch.no_grad():
+        for data, target in test_loader:
+            data, target = data.to(device), target.to(device)
+            output = network(data)
+            test_loss += F.cross_entropy(output, target, reduction='sum').item()
+            pred = output.argmax(dim=1)
+            correct += pred.eq(target).sum().item()
+
+            # store predictions and targets for confusion matrix
+            predictions.extend(pred.cpu().numpy())
+            targets.extend(target.cpu().numpy())
 
 
+    test_loss /= len(test_loader.dataset)
+    accuracy = 100. * correct / len(test_loader.dataset)
+
+    precision = precision_score(targets, predictions, average='weighted')
+    recall = recall_score(targets, predictions, average='weighted')
+    f1 = f1_score(targets, predictions, average='weighted')
+
+    print(
+        {'test_loss': test_loss,
+         'accuracy': accuracy,
+         'precision': precision,
+         'recall': recall,
+         'f1': f1
+         })
+
+    return {'test_loss': test_loss,
+            'accuracy': accuracy,
+            'precision': precision,
+            'recall': recall,
+            'f1': f1
+            }
 
 
 def main():
     """Main function used to train the network."""
     print('Start training the data')
     # train_network()
+    test_loader = ASLDataSet().get_testing_dataset()
+    test_network('model.pth', test_loader)
     print('Finish training data')
 
 

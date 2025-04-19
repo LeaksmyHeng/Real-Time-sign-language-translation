@@ -34,6 +34,9 @@ train_dataset = ImageFolder(root=r'C:\Users\hengl\OneDrive\Documents\GitHub\Real
 val_dataset = ImageFolder(root=r'C:\Users\hengl\OneDrive\Documents\GitHub\Real-Time-sign-language-translation\deep_learning_framework\data\validating_data', transform=transform)
 test_dataset = ImageFolder(root=r'C:\Users\hengl\OneDrive\Documents\GitHub\Real-Time-sign-language-translation\deep_learning_framework\data\testing_data', transform=transform)
 
+# mapping class to index
+index_to_class = {value: key for key, value in val_dataset.class_to_idx.items()}
+
 
 class ASLDataSet:
     """

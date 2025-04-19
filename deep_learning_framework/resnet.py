@@ -79,7 +79,7 @@ def ResNet_implementation(train_generator, validation_generator):
                                )
 
     # save the model
-    model.save('resnet50_v2.h5')
+    model.save('resnet50.h5')
 
     metrics = pd.DataFrame(model.history.history)
     print("The model ResNet50 metrics are")
