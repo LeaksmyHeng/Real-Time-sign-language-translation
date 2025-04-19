@@ -136,7 +136,6 @@ class Dataset:
                         if alphabet not in data_count[folder]:
                             data_count[folder][alphabet] = 0
 
-                        counter = 0
                         for img in os.listdir(fr'{output_path}\{folder}\{alphabet}'):
                             data_count[folder][alphabet] += 1
                             # I also want to see the type of image like color and shape
