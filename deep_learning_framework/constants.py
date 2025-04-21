@@ -13,7 +13,7 @@ class Constants:
     LEARNING_RATE = 0.1
 
     # This is for the opencv where I have to get the ROI for the hand
-    BUFFER = 25
+    BUFFER = 30
 
     # Constants used mainly in data_pytorch
     MOMENTUM = 0.5
@@ -21,3 +21,6 @@ class Constants:
     RANDOM_SEED = 1
     KERNEL_SIZE = 5
     MOMENTUM = 0.5
+
+    # Threshold confidential
+    CONFIDENTIAL_THRESHOLD = 0.8

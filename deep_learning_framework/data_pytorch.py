@@ -36,7 +36,7 @@ test_dataset = ImageFolder(root=r'C:\Users\hengl\OneDrive\Documents\GitHub\Real-
 
 # mapping class to index
 index_to_class = {value: key for key, value in val_dataset.class_to_idx.items()}
-
+# index_to_class = val_dataset.class_to_idx
 
 class ASLDataSet:
     """

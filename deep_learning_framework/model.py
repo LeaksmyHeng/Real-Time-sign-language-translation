@@ -179,7 +179,7 @@ def train(epoch: int, device, network: ResNet50, train_loader, optimizer: torch.
             # Task 1D - Save the network to a file
             # save the state dictionaries of both the neural network model and the optimizer
             if is_save:
-                torch.save(network.state_dict(), 'model.pth')
+                torch.save(network.state_dict(), 'output/train_from_scratch/model.pth')
                 torch.save(optimizer.state_dict(), '../optimizer.pth')
 
     return train_losses, train_counter
@@ -324,7 +324,7 @@ def main():
     print('Start training the data')
     # train_network()
     test_loader = ASLDataSet().get_testing_dataset()
-    test_network('model.pth', test_loader)
+    test_network('output/train_from_scratch/model.pth', test_loader)
     print('Finish training data')
 
 
