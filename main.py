@@ -21,7 +21,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 
-def execute(network_path):
+def execute(network_path, is_second_method=False):
     """
     Main function to integrate the camera with the model to implement real-time sign language translation.
 
